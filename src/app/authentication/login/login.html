@@ -22,6 +22,10 @@
             </div>
         </aside>
 
+        <!-- <main class="zaid">
+            <h1>zaid </h1>
+        </main> -->
+
         <main class="auth-card" [class.flipped]="isFlipped" role="main" aria-labelledby="login-heading">
             <section class="card-face card-front" aria-hidden="{{isFlipped}}">
                 <div class="card-inner">
@@ -39,10 +43,10 @@
                                     [class.input-error]="email?.invalid && email?.touched"
                                     [class.input-valid]="email?.valid && email?.touched" autocomplete="email" />
                             </div>
-                            <div id="email-help" class="validation" *ngIf="email?.invalid && email?.touched">
+                            <!-- <div id="email-help" class="validation" *ngIf="email?.invalid && email?.touched">
                                 <span *ngIf="email?.errors?.['required']">Email is required</span>
                                 <span *ngIf="email?.errors?.['email']">Enter a valid email</span>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="field">
@@ -88,12 +92,14 @@
                             <button type="button" class="btn ghost" (click)="socialLogin('apple')"></button>
                             <button type="button" class="btn ghost" (click)="socialLogin('microsoft')">M</button>
                         </div>
-                    </form>
 
-                    <footer class="card-footer">
+                         <footer class="card-footer">
                         <span class="muted">Don't have an account?</span>
                         <a class="link strong" href="#" (click)="flipCard($event)">Create one</a>
                     </footer>
+                    </form>
+
+                   
                 </div>
             </section>
 

@@ -18,17 +18,14 @@ export const DashboardRoutes: Routes = [
 
          // <-- ADD THIS BLOCK -->
          {
-            path: 'support',
+            path: '',
             // lazy-load the support module we created earlier
             loadChildren: () =>
                import('./support/support.module').then(m => m.SupportModule)
          },
          // <-- END ADD -->
-         {
-            path: 'support',
-            loadChildren: () => import('./support/support.module').then(m => m.SupportModule)
-         }
 
       ]
+
    }
 ];

@@ -1,30 +1,32 @@
-<nav class="sidebar-nav" [class.collapsed]="collapsed">
-    <div class="nav-brand" *ngIf="!collapsed">
-        <div class="brand-logo">
-            <div class="logo-circle">D</div>
+<div class="sidenav" [class.collapsed]="collapsed">
+  <ul class="nav flex-column">
+
+    <!-- Dashboard -->
+    <li class="nav-item">
+      <a class="nav-link d-flex align-items-center" routerLink="/dashboard" routerLinkActive="active">
+        <i class="bi bi-speedometer2 me-2"></i>
+        <span class="link-text" *ngIf="!collapsed">Dashboard</span>
+      </a>
+    </li>
+
+    <!-- Support Master -->
+    <li class="nav-item">
+      <a class="nav-link d-flex justify-content-between align-items-center" (click)="toggleSupportMaster()">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-life-preserver me-2"></i>
+          <span class="link-text" *ngIf="!collapsed">Support Master</span>
         </div>
-        <h3 class="brand-title">Dashboard</h3>
-    </div>
+        <i class="bi" *ngIf="!collapsed"
+          [ngClass]="{'bi-chevron-down': !isSupportMasterOpen, 'bi-chevron-up': isSupportMasterOpen}"></i>
+      </a>
 
-    <div class="nav-menu">
-        <a routerLink="/admin-dashboard/home" routerLinkActive="active" class="nav-item">
-            <div class="nav-icon">🏠</div>
-            <span class="nav-text" [class.hidden]="collapsed">Home</span>
-        </a>
+      <!-- Submenu only visible when expanded -->
+      <ul class="submenu list-unstyled ps-4" *ngIf="isSupportMasterOpen && !collapsed">
+        <li>
+          <a routerLink="ticket-management" routerLinkActive="active">Ticket Management</a>
+        </li>
+      </ul>
+    </li>
 
-        <a routerLink="/admin-dashboard/analytics" routerLinkActive="active" class="nav-item">
-            <div class="nav-icon">📊</div>
-            <span class="nav-text" [class.hidden]="collapsed">Analytics</span>
-        </a>
-
-        <a routerLink="/admin-dashboard/users" routerLinkActive="active" class="nav-item">
-            <div class="nav-icon">👥</div>
-            <span class="nav-text" [class.hidden]="collapsed">Users</span>
-        </a>
-
-        <a routerLink="/admin-dashboard/settings" routerLinkActive="active" class="nav-item">
-            <div class="nav-icon">⚙️</div>
-            <span class="nav-text" [class.hidden]="collapsed">Settings</span>
-        </a>
-    </div>
-</nav>
+  </ul>
+</div>

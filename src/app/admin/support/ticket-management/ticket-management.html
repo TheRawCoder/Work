@@ -1,96 +1,222 @@
-<div class="support-page">
-    <div class="stats-row" nz-row nzGutter="24">
-        <div nz-col nzSpan="6"><nz-card>
-                <div class="title">Processing</div>
-                <div class="value">{{stats.processing || 0}}</div>
-            </nz-card></div>
-        <div nz-col nzSpan="6"><nz-card>
-                <div class="title">Raised</div>
-                <div class="value">{{stats.raised || 0}}</div>
-            </nz-card></div>
-        <div nz-col nzSpan="6"><nz-card>
-                <div class="title">Resolved</div>
-                <div class="value">{{stats.resolved || 0}}</div>
-            </nz-card></div>
-        <div nz-col nzSpan="6"><nz-card>
-                <div class="title">Rejected</div>
-                <div class="value">{{stats.rejected || 0}}</div>
-            </nz-card></div>
+<div class="ticket-management p-4 mt-5">
+  <!-- Status Cards (click to filter) -->
+  <div class="status-cards d-flex align-items-center gap-3 mb-4">
+    <div class="card processing clickable" (click)="onStatusCardClick('Processing')"
+      [class.active]="filterBy === 'status' && filters.status === 'Processing'">
+      <div class="text">
+        <div class="title">
+          Processing
+          <span class="count">({{ (counts$ | async)?.Processing ?? 0 }})</span>
+        </div>
+      </div>
     </div>
 
-    <nz-card class="filter-card" style="margin-top:16px;">
-        <form [formGroup]="filterForm">
-            <div nz-row nzGutter="16">
-                <div nz-col nzSpan="6">
-                    <label>Filter By</label>
-                    <nz-select formControlName="filterBy" nzPlaceHolder="All">
-                        <nz-option *ngFor="let o of filterByOptions" [nzValue]="o.value"
-                            [nzLabel]="o.label"></nz-option>
-                    </nz-select>
-                </div>
+    <div class="card raised clickable" (click)="onStatusCardClick('Raised')"
+      [class.active]="filterBy === 'status' && filters.status === 'Raised'">
+      <div class="text">
+        <div class="title">
+          Raised
+          <span class="count">({{ (counts$ | async)?.Raised ?? 0 }})</span>
+        </div>
+      </div>
+    </div>
 
-                <div nz-col nzSpan="6"
-                    *ngIf="filterForm.get('filterBy')!.value === 'all' || filterForm.get('filterBy')!.value === 'refId'">
-                    <label>Ref ID</label>
-                    <input nz-input placeholder="Enter Ref ID" formControlName="refId" />
-                </div>
+    <div class="card resolved clickable" (click)="onStatusCardClick('Resolved')"
+      [class.active]="filterBy === 'status' && filters.status === 'Resolved'">
+      <div class="text">
+        <div class="title">
+          Resolved
+          <span class="count">({{ (counts$ | async)?.Resolved ?? 0 }})</span>
+        </div>
+      </div>
+    </div>
 
-                <div nz-col nzSpan="6"
-                    *ngIf="filterForm.get('filterBy')!.value === 'all' || filterForm.get('filterBy')!.value === 'status'">
-                    <label>Status</label>
-                    <nz-select formControlName="status" nzPlaceHolder="Select status" nzAllowClear>
-                        <nz-option *ngFor="let s of statuses" [nzValue]="s" [nzLabel]="s"></nz-option>
-                    </nz-select>
-                </div>
+    <div class="card rejected clickable" (click)="onStatusCardClick('Rejected')"
+      [class.active]="filterBy === 'status' && filters.status === 'Rejected'">
+      <div class="text">
+        <div class="title">
+          Rejected
+          <span class="count">({{ (counts$ | async)?.Rejected ?? 0 }})</span>
+        </div>
+      </div>
+    </div>
 
-                <div nz-col nzSpan="6">
-                    <label>Date Range</label>
-                    <nz-range-picker formControlName="dateRange" style="width:100%"></nz-range-picker>
-                </div>
+    <!-- <div class="ml-auto">
+      <button nz-button nzType="default" (click)="clearStatusFilter()">Show All</button>
+    </div> -->
+  </div>
 
-                <div nz-col nzSpan="24" style="margin-top:12px;">
-                    <button nz-button nzType="primary" (click)="search(); $event.preventDefault()">Search</button>
-                    <button nz-button (click)="clear(); $event.preventDefault()"
-                        style="margin-left:8px;">Refresh</button>
-                </div>
-            </div>
-        </form>
-    </nz-card>
+  <!-- Filters -->
+  <div nz-row [nzGutter]="16" class="filters mb-3">
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6" [nzLg]="4">
+      <label class="form-label mb-1">Filter By</label>
+      <nz-select class="w-100" [(ngModel)]="filterBy" [nzAllowClear]="false">
+        <nz-option [nzValue]="'all'" nzLabel="All"></nz-option>
+        <nz-option [nzValue]="'status'" nzLabel="Status"></nz-option>
+        <nz-option [nzValue]="'refId'" nzLabel="Ref ID"></nz-option>
+      </nz-select>
+    </div>
 
-    <nz-card style="margin-top:16px;">
-        <nz-table [nzData]="listOfData" [nzFrontPagination]="false" [nzLoading]="loading">
-            <thead>
-                <tr>
-                    <th>Sr.No</th>
-                    <th>Ticket Ref ID</th>
-                    <th>Category</th>
-                    <th>Sub Category</th>
-                    <th>Description</th>
-                    <th>Created Date</th>
-                    <th>Updated Date</th>
-                    <th>Status</th>
-                    <th>Remark</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of listOfData; let i = index">
-                    <td>{{i + 1}}</td>
-                    <td>{{item.refId}}</td>
-                    <td>{{item.category}}</td>
-                    <td>{{item.subCategory}}</td>
-                    <td>{{item.description}}</td>
-                    <td>{{item.createdAt | date:'dd/MM/yyyy'}}</td>
-                    <td>{{item.updatedAt | date:'dd/MM/yyyy'}}</td>
-                    <td>{{item.status}}</td>
-                    <td>{{item.remark}}</td>
-                    <td><a (click)="$event.preventDefault()">View</a></td>
-                </tr>
+    <!-- Status / Ref ID conditional -->
+    <ng-container *ngIf="filterBy === 'status' || filterBy === 'refId'">
+      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6" [nzLg]="4">
 
-                <tr *ngIf="!loading && listOfData.length === 0">
-                    <td colspan="10"><nz-empty></nz-empty></td>
-                </tr>
-            </tbody>
+        <ng-container *ngIf="filterBy === 'status'">
+          <label class="form-label mb-1">Status</label>
+          <nz-select class="w-100" [(ngModel)]="filters.status">
+            <nz-option nzValue="Processing" nzLabel="Processing"></nz-option>
+            <nz-option nzValue="Raised" nzLabel="Raised"></nz-option>
+            <nz-option nzValue="Resolved" nzLabel="Resolved"></nz-option>
+            <nz-option nzValue="Rejected" nzLabel="Rejected"></nz-option>
+          </nz-select>
+        </ng-container>
+
+        <ng-container *ngIf="filterBy === 'refId'">
+          <label class="form-label mb-1">Ref ID</label>
+          <input nz-input [(ngModel)]="filters.ticketRefId" placeholder="Enter Ref ID" />
+        </ng-container>
+
+      </div>
+    </ng-container>
+
+    <!-- Date Range -->
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="8">
+      <label class="form-label mb-1">Selected Date Range</label>
+      <nz-range-picker [(ngModel)]="filters.dateRange" [nzFormat]="'dd/MM/yyyy'" [nzAllowClear]="true"
+        [nzPopupStyle]="{ zIndex: 1050, position: 'absolute' }" nzDropdownClassName="custom-range-popup">
+      </nz-range-picker>
+    </div>
+
+    <!-- Buttons -->
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="4">
+      <label class="form-label mb-1 d-block">&nbsp;</label>
+      <div class="d-flex flex-column flex-sm-row gap-2">
+        <button nz-button nzType="primary" class="search-btn" (click)="applyFilter()">
+          <i nz-icon nzType="search"></i> Search
+        </button>
+        <button nz-button nzType="default" (click)="resetFilters()">
+          <i nz-icon nzType="reload"></i> Refresh
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-responsive">
+    <nz-table [nzBordered]="true" [nzSize]="'middle'" [nzData]="tickets" [nzFrontPagination]="true"
+      [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" (nzPageIndexChange)="onPageIndexChange($event)"
+      (nzPageSizeChange)="onPageSizeChange($event)" [nzShowPagination]="true" [nzShowSizeChanger]="false" class="mt-3">
+      <thead class="custom-header">
+        <tr>
+          <th nzWidth="60px">Sr.No</th>
+          <th>Ticket Ref ID</th>
+          <th>Category</th>
+          <th>Sub Category</th>
+          <th>Description</th>
+          <th>Created Date</th>
+          <th>Updated Date</th>
+          <th>Status</th>
+          <th>Remark</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ticket of tickets | slice:(pageIndex-1)*pageSize:(pageIndex*pageSize); let i = index">
+          <td class="text-center">{{ (pageIndex - 1) * pageSize + i + 1 }}</td>
+          <td class="text-center">{{ ticket.ticketRefId }}</td>
+          <td class="text-center">{{ ticket.category }}</td>
+          <td class="text-center">{{ ticket.subCategory }}</td>
+          <td class="text-center">{{ ticket.description }}</td>
+          <td class="text-center">{{ ticket.createdAt | date:'dd-MM-yyyy' }}</td>
+          <td class="text-center">{{ ticket.updatedAt ? (ticket.updatedAt | date:'dd-MM-yyyy') : '-' }}</td>
+          <td class="text-center">
+            <nz-tag [nzColor]="
+              ticket.status === 'Processing' ? 'warning' :
+              ticket.status === 'Raised' ? 'geekblue' :
+              ticket.status === 'Resolved' ? 'success' :
+              'error'">
+              {{ ticket.status }}
+            </nz-tag>
+          </td>
+          <td class="text-center">{{ ticket.remark }}</td>
+          <td class="text-center">
+            <button nz-button nzType="link" (click)="openDrawer(ticket)">Take Action</button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+  <!-- Drawer -->
+  <nz-drawer [nzVisible]="isDrawerVisible" nzTitle="Take Action" nzPlacement="right" [nzClosable]="true"
+    (nzOnClose)="closeDrawer()" [nzWidth]="drawerWidth">
+    <ng-container *nzDrawerContent>
+      <!-- Ticket Form -->
+      <form [formGroup]="ticketForm" (ngSubmit)="saveTicket()">
+        <div class="row g-3 form-gap">
+          <div class="col-md-6">
+            <label class="form-label">Ticket Ref Id</label>
+            <input type="text" class="form-control" formControlName="ticketRefId" readonly />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Category</label>
+            <input type="text" class="form-control" formControlName="category" readonly />
+          </div>
+        </div>
+
+        <div class="row g-3 form-gap">
+          <div class="col-md-6">
+            <label class="form-label">Sub Category</label>
+            <input type="text" class="form-control" formControlName="subCategory" readonly />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Status</label>
+            <select class="form-select" formControlName="status">
+              <option value="Raised">Raised</option>
+              <option value="Processing">Processing</option>
+              <option value="Resolved">Resolved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group form-gap">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" formControlName="description" rows="3" readonly></textarea>
+        </div>
+
+        <div class="form-group form-gap">
+          <label class="form-label">Remark</label>
+          <textarea class="form-control" formControlName="remark" rows="3" placeholder="Enter remark"></textarea>
+        </div>
+
+        <div class="mt-4 text-end">
+          <button nz-button nzType="primary" htmlType="submit">Submit</button>
+          <button nz-button nzType="default" (click)="closeDrawer()">Cancel</button>
+        </div>
+      </form>
+
+      <!-- Ticket History -->
+      <div class="ticket-history mt-5">
+        <h5>Update History</h5>
+        <nz-table [nzBordered]="true" [nzData]="ticketHistory" [nzShowPagination]="false">
+          <ng-template #emptyTemplate></ng-template>
+          <thead>
+            <tr>
+              <th>Updated By</th>
+              <th>Status</th>
+              <th>Updated At</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let history of ticketHistory">
+              <td>{{ history.updatedBy }}</td>
+              <td>{{ history.status }}</td>
+              <td>{{ history.updatedAt | date:'dd-MM-yyyy hh:mm:ss a' }}</td>
+            </tr>
+          </tbody>
         </nz-table>
-    </nz-card>
+      </div>
+    </ng-container>
+  </nz-drawer>
 </div>

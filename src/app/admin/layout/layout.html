@@ -1,15 +1,16 @@
-<div class="neuro-container">
-    <div class="dashboard-grid" [class.collapsed]="sidebarCollapsed">
-        <header class="header-area">
-            <app-menu (toggleSidebar)="toggleSidebar()"></app-menu>
-        </header>
 
-        <aside class="sidebar-area">
-            <app-side-nav [collapsed]="sidebarCollapsed"></app-side-nav>
-        </aside>
 
-        <main class="content-area">
-            <router-outlet></router-outlet>
-        </main>
-    </div>
+
+
+<app-menu (sidebarToggle)="toggleSidebar()"></app-menu>
+
+<!-- wrapper receives the toggle class -->
+<div class="app-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <app-side-nav [collapsed]="isSidebarCollapsed"></app-side-nav>
+
+  <main class="main-content">
+    <!-- optional debug -->
+    <!-- isCollapsed: {{ isSidebarCollapsed }} -->
+    <router-outlet></router-outlet>
+  </main>
 </div>

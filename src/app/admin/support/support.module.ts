@@ -17,11 +17,23 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { RouterModule, Routes } from '@angular/router';
+
+
+
+const routes: Routes = [
+  {
+    path: 'ticket-management',
+    component: TicketManagementComponent
+  }
+];
+
 
 @NgModule({
     // standalone components must be imported (not declared)
     imports: [
         CommonModule,
+        FormsModule,
         SupportRoutingModule,
         FormsModule,
         ReactiveFormsModule,
@@ -34,7 +46,8 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
         NzInputModule,
         NzDropDownModule,
         NzEmptyModule,
-        TicketManagementComponent
+        TicketManagementComponent,
+        RouterModule.forChild(routes)
     ]
     // no declarations
 })
