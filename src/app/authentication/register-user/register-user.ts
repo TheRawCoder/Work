@@ -21,7 +21,7 @@ export interface User {
 })
 export class RegisterUserComponent implements OnInit {
   users: User[] = [];
-  editingUserId: string | null = null;  // ✅ changed number → string
+  editingUserId: string | null = null;  
   editingUser: User = {} as User;
   originalEditingUser: User = {} as User;
 

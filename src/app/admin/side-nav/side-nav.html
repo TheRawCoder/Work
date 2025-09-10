@@ -1,7 +1,6 @@
 <div class="sidenav" [class.collapsed]="collapsed">
   <ul class="nav flex-column">
 
-    <!-- Dashboard -->
     <li class="nav-item">
       <a class="nav-link d-flex align-items-center" routerLink="/dashboard" routerLinkActive="active">
         <i class="bi bi-speedometer2 me-2"></i>
@@ -9,24 +8,38 @@
       </a>
     </li>
 
-    <!-- Support Master -->
     <li class="nav-item">
       <a class="nav-link d-flex justify-content-between align-items-center" (click)="toggleSupportMaster()">
         <div class="d-flex align-items-center">
           <i class="bi bi-life-preserver me-2"></i>
           <span class="link-text" *ngIf="!collapsed">Support Master</span>
         </div>
-        <i class="bi" *ngIf="!collapsed"
-          [ngClass]="{'bi-chevron-down': !isSupportMasterOpen, 'bi-chevron-up': isSupportMasterOpen}"></i>
+        <i class="bi" *ngIf="!collapsed" [ngClass]="{
+            'bi-chevron-down': !isSupportMasterOpen,
+            'bi-chevron-up': isSupportMasterOpen
+          }"></i>
       </a>
 
-      <!-- Submenu only visible when expanded -->
       <ul class="submenu list-unstyled ps-4" *ngIf="isSupportMasterOpen && !collapsed">
         <li>
-          <a routerLink="ticket-management" routerLinkActive="active">Ticket Management</a>
+          <a routerLink="ticket-management" routerLinkActive="active">
+            <i class="bi bi-ticket-detailed me-2"></i>
+            <span class="link-text">Ticket Management</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="file-upload" routerLinkActive="active">
+            <i class="bi bi-upload me-2"></i>
+            <span class="link-text">File Upload</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="export-data" routerLinkActive="active">
+            <i class="bi bi-file-earmark-arrow-down me-2"></i>
+            <span class="link-text">Export Data</span>
+          </a>
         </li>
       </ul>
     </li>
-
   </ul>
 </div>

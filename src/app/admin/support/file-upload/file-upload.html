@@ -1,0 +1,42 @@
+<div class="container py-5">
+    <h2 class="mb-4 fw-bold">My Files</h2>
+    <div class="upload-box mb-3">
+        <input #fileInput type="file" (change)="onFileSelected($event)" class="form-control mb-2" />
+        <button class="btn btn-primary" (click)="uploadFile()" [disabled]="isUploading">
+            <span *ngIf="!isUploading">Upload</span>
+            <span *ngIf="isUploading">
+                <span class="spinner-border spinner-border-sm me-2"></span> Uploading...
+            </span>
+        </button>
+    </div>
+
+    <div class="d-flex mb-3">
+        <button class="btn btn-primary" (click)="fetchHistory(true)">Load History</button>
+
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Sr.No</th>
+                    <th>File Name</th>
+                    <th>Size (KB)</th>
+                    <th>Type</th>
+                    <th>Uploaded At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="uploadedFiles.length === 0">
+                    <td colspan="6" class="text-center text-muted">No files uploaded yet.</td>
+                </tr>
+                <tr *ngFor="let file of uploadedFiles; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ file.name }}</td>
+                    <td>{{ (file.size / 1024) | number:'1.0-2' }}</td>
+                    <td>{{ file.mimetype }}</td>
+                    <td>{{ file.uploadedAt | date:'dd/MM/yyyy' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

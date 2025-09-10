@@ -1,0 +1,85 @@
+.export-data {
+  .filters {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+    label.form-label {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .ant-select, .ant-picker, input[nz-input] {
+      width: 100% !important;
+      height: 36px !important;
+    }
+
+    button[nz-button] {
+      min-width: 100px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      }
+    }
+  }
+
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+
+    nz-table {
+      .ant-table-thead > tr > th {
+        background-color: #1890ff;
+        color: #fff;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .ant-table-tbody > tr > td {
+        vertical-align: middle;
+      }
+
+      .ant-table-body {
+        overflow-x: auto !important;
+      }
+
+      .ant-table-body::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+}
+
+button.blue-btn {
+  background-color: #1890ff !important;
+  border-color: #1890ff !important;
+  color: #fff !important;
+  min-width: 100px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+  &:hover {
+    background-color: #40a9ff !important; 
+    border-color: #40a9ff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+}
+
+
+tr th {
+  background-color: #2fabe1;
+  border: 1px solid #b6b6b6;
+  text-align: center;
+  color: aliceblue;
+
+  &:hover {
+    background-color: #276782
+  }
+}

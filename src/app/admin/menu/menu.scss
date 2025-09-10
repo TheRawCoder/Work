@@ -3,13 +3,13 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;   /* same as your sidenav offset */
-  z-index: 1000;  /* make sure it stays above sidebar */
+  height: 60px; 
+  z-index: 1000;  
   padding: 0 20px;
 }
 
 .content {
-  margin-left: 250px; /* space for sidebar */
-  margin-top: 60px;   /* push below fixed navbar */
+  margin-left: 250px; 
+  margin-top: 60px;   
   padding: 20px;
 }

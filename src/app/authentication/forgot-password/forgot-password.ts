@@ -25,20 +25,20 @@ import { Router } from '@angular/router';
   ],
 })
 export class ForgotPasswordComponent {
-  // flow control
+
   step = 1;
 
-  // forms
+
   forgotForm: FormGroup;
   otpForm: FormGroup;
   resetForm: FormGroup;
 
-  // ui flags
-  showPassword = false; // (kept if you use a single toggle elsewhere)
-  showNew = false;      // toggle "New Password"
-  showConfirm = false;  // toggle "Confirm Password"
 
-  // state
+  showPassword = false;
+  showNew = false;      
+  showConfirm = false;  
+
+
   email = '';
   otp = '';
 
@@ -65,14 +65,14 @@ export class ForgotPasswordComponent {
     );
   }
 
-  // ----- validators -----
+
   private passwordMatchValidator(form: FormGroup) {
     const newPassword = form.get('newPassword')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
     return newPassword === confirmPassword ? null : { passwordMismatch: true };
   }
 
-  // ----- step 1: request OTP -----
+
   onSendOtp() {
     if (this.forgotForm.invalid) return;
     this.email = this.forgotForm.value.email;
@@ -100,7 +100,7 @@ export class ForgotPasswordComponent {
     });
   }
 
-  // ----- step 2: verify OTP -----
+
   onVerifyOtp() {
     if (this.otpForm.invalid) return;
     this.otp = this.otpForm.value.otp;
@@ -128,7 +128,7 @@ export class ForgotPasswordComponent {
     });
   }
 
-  // ----- step 3: reset password -----
+
   onResetPassword() {
     if (this.resetForm.invalid) return;
 
@@ -137,7 +137,7 @@ export class ForgotPasswordComponent {
     console.log('📤 Resetting password:', {
       email: this.email,
       otp: this.otp,
-      newPassword: '••••••', // do not log actual password
+      newPassword: '••••••', 
       confirmPassword: '••••••',
     });
 
@@ -163,7 +163,7 @@ export class ForgotPasswordComponent {
     });
   }
 
-  // optional global toggle (if used elsewhere)
+
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }

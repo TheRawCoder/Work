@@ -1,6 +1,6 @@
 .sidenav {
   width: 240px;
-  height: calc(100vh - 60px); // subtract navbar height
+  height: calc(100vh - 60px); 
   background-color: #022d49;
   position: fixed;
   top: 60px;
@@ -24,7 +24,6 @@
   margin-left: 60px;
 }
 
-/* Links */
 .sidenav .nav-link {
   color: #fff;
   padding: 12px 20px;
@@ -43,7 +42,9 @@
 .submenu a {
   color: #cfd8dc;
   padding: 8px 15px;
-  display: block;
+  display: flex;
+  align-items: center;
+  transition: background 0.3s;
 }
 
 .submenu a:hover,
@@ -51,4 +52,21 @@
   color: #fff;
   background-color: #046fa1;
   border-radius: 4px;
+}
+
+.sidenav.collapsed .link-text {
+  display: none;
+}
+
+.sidenav.collapsed .submenu {
+  padding-left: 0 !important;
+}
+
+.sidenav.collapsed .submenu a {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.sidenav.collapsed i.me-2 {
+  margin-right: 0 !important;
 }

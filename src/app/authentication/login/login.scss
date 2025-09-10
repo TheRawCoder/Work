@@ -1,9 +1,7 @@
 .jodetx-login-root {
-  /* minimal edits: keep your vars but ensure the right-card fits */
   --card-min-height: clamp(520px, 66vh, 720px);
   --card-max-width: 520px;
 
-  /* keep original design tokens (unchanged) */
   --primary-50: #eff6ff; --primary-100: #dbeafe; --primary-200: #bfdbfe;
   --primary-300: #93c5fd; --primary-400: #60a5fa; --primary-500: #3b82f6;
   --primary-600: #2563eb; --primary-700: #1d4ed8; --primary-800: #1e40af;
@@ -58,14 +56,11 @@
     display: grid;
     grid-template-columns: 1fr var(--card-max-width);
     gap: 40px;
-    // align-items: center;
-    // justify-items: center;
     padding: 0;
     position: relative;
     z-index: 1;
   }
 
-  /* IMAGE PANEL — unchanged aside from safe max-height */
   .auth-image-panel {
     position: relative;
     width: 100%;
@@ -89,7 +84,6 @@
   .image-copy h3 { font-size: 28px; margin: 0 0 8px 0; color: #fff; font-weight: 800; }
   .image-copy p { margin: 0; color: rgba(255,255,255,0.9); }
 
-  /* AUTH CARD — ensure card uses the card-min-height so the right box is tall enough */
   .auth-card {
     width: 100%;
     max-width: var(--card-max-width);
@@ -99,16 +93,12 @@
     z-index: 2;
     perspective: 1200px;
     position: relative;
-    // min-height: var(--card-min-height);
-    // height: var(--card-min-height); /* key: fixed card height for desktop */
-    // max-height: none;
     min-height: var(--card-min-height);
     max-height: calc(100vh - 20px);
     display: flex;
     align-items: center;
   }
 
-  /* CARD FACE — allow content to be visible (not clipped) */
   .card-face {
     position: absolute;
     top: 0; left: 0;
@@ -118,7 +108,7 @@
     transform-style: preserve-3d;
     transition: transform .6s cubic-bezier(.22,1,.36,1), opacity .28s ease;
     box-sizing: border-box;
-    padding: 26px; /* slightly reduced padding to free vertical space */
+    padding: 26px; 
     border-radius: var(--radius-xl);
     background: rgba(255,255,255,0.95);
     backdrop-filter: blur(10px);
@@ -126,7 +116,7 @@
     box-shadow: var(--shadow-md);
 
     min-height: 0;
-    overflow: visible; /* allow elements near the bottom to remain visible */
+    overflow: visible; 
   }
 
   .card-front { transform: rotateY(0deg); opacity: 1; z-index: 2; }
@@ -135,12 +125,11 @@
   .auth-card.flipped .card-front { transform: rotateY(-180deg); opacity: 0; z-index: 1; }
   .auth-card.flipped .card-back  { transform: rotateY(0deg); opacity: 1; z-index: 2; }
 
-  /* CARD INNER — avoid space-between that allowed form to grow and push footer */
   .card-inner {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* important */
+    justify-content: flex-start;
     min-height: 0;
     gap: 8px;
   }
@@ -150,26 +139,24 @@
   .card-header h1 { margin: 0; font-size: 21px; font-weight: 800; color: var(--neutral-900); }
   .card-header .subtle { color: var(--neutral-500); font-size: 13px; margin-top: 6px; }
 
-  /* FORM — compact on desktop, do not grow and do not scroll */
   .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 8px;            /* slightly smaller */
-    flex: 0 0 auto;      /* KEY: do not grow to push footer */
+    gap: 8px;          
+    flex: 0 0 auto;      
     justify-content: flex-start;
     min-height: 0;
-    overflow: visible;   /* NO internal scroll for desktop */
+    overflow: visible;   
     padding-right: 0;
   }
 
-  /* INPUTS — reduce vertical footprint slightly so fields + button + footer fit */
   .field { display:flex; flex-direction:column; gap:6px; }
   .label { font-size: 14px; font-weight: 600; color: var(--neutral-700); margin: 0 0 4px 0; }
 
   .input-group { position: relative; width: 100%; display:block; }
   .input-group input {
     width: 100%;
-    padding: 10px 12px;   /* reduced */
+    padding: 10px 12px;  
     border-radius: var(--radius-md);
     border: 2px solid var(--neutral-200);
     background: var(--neutral-50);
@@ -178,7 +165,7 @@
     box-shadow: var(--shadow-sm);
     transition: all .12s ease;
     box-sizing: border-box;
-    min-height: 44px;     /* reduced */
+    min-height: 44px;    
   }
   .input-with-action input { padding-right: 50px; }
 
@@ -190,7 +177,6 @@
 
   .row-between { display:flex; justify-content:space-between; align-items:center; margin-top: 6px; }
 
-  /* ACTIONS — slightly smaller height but still prominent */
   .actions { margin-top: 8px; }
   .btn { display:inline-flex; align-items:center; justify-content:center; gap:10px; padding:10px 14px; border-radius: var(--radius-md); font-weight:700; font-size:14px; cursor:pointer; min-height:44px; }
   .btn.full { width:100%; }
@@ -199,10 +185,8 @@
   .divider { text-align:center; color: var(--neutral-400); font-size: 13px; margin: 10px 0; }
   .social-grid { display:flex; gap:10px; justify-content:center; margin-top: 6px; }
 
-  /* Footer — reduced spacing so it's visible */
   .card-footer { display:flex; gap:8px; justify-content:center; align-items:center; margin-top: 8px; }
 
-  /* Focus / autofill */
   :focus { outline: none; }
   input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
     -webkit-box-shadow: 0 0 0 1000px var(--panel, #fff) inset !important;
@@ -211,7 +195,6 @@
     caret-color: var(--neutral-900) !important;
   }
 
-  /* MEDIA — responsive: on smaller screens re-enable internal scroll within the form */
   @media (max-width: 1000px) {
     .jodetx-inner { grid-template-columns: 1fr; gap: 28px; padding-inline: 12px; }
     .auth-image-panel { min-height: clamp(360px, 46vh, 520px); max-height: calc(100vh - 64px); }

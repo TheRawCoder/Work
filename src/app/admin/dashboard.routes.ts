@@ -16,15 +16,14 @@ export const DashboardRoutes: Routes = [
             loadComponent: () => import('./home/home').then(m => m.HomeComponent)
          },
 
-         // <-- ADD THIS BLOCK -->
+    
          {
             path: '',
-            // lazy-load the support module we created earlier
+          
             loadChildren: () =>
                import('./support/support.module').then(m => m.SupportModule)
          },
-         // <-- END ADD -->
-
+      
       ]
 
    }

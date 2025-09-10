@@ -10,10 +10,10 @@ export class AuthGuard implements CanActivate {
 
     canActivate(): Observable<boolean> {
         return this.authService.validateToken().pipe(
-            map(() => true), // ✅ token valid → allow access
+            map(() => true), 
             catchError(() => {
-                localStorage.removeItem('token'); // clear invalid token
-                this.router.navigate(['/login']); // redirect to login
+                localStorage.removeItem('token'); 
+                this.router.navigate(['/login']); 
                 return of(false);
             })
         );

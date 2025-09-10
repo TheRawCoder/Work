@@ -4,13 +4,11 @@
 
 <app-menu (sidebarToggle)="toggleSidebar()"></app-menu>
 
-<!-- wrapper receives the toggle class -->
 <div class="app-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
   <app-side-nav [collapsed]="isSidebarCollapsed"></app-side-nav>
 
   <main class="main-content">
-    <!-- optional debug -->
-    <!-- isCollapsed: {{ isSidebarCollapsed }} -->
+  
     <router-outlet></router-outlet>
   </main>
 </div>

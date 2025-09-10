@@ -7,12 +7,12 @@ import { User } from '../../app/authentication/register-user/register-user';
     providedIn: 'root'
 })
 export class UserApiService {
-    private baseUrl = 'http://localhost:3000/users'; // adjust your backend URL
+    private baseUrl = 'http://localhost:3000/users'; 
 
     constructor(private http: HttpClient) { }
 
     private getAuthHeaders(): HttpHeaders {
-        const token = localStorage.getItem('jwtToken'); // token stored after login
+        const token = localStorage.getItem('jwtToken'); 
         return new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
