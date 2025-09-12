@@ -38,57 +38,53 @@
             </div>
 
             <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="4">
-                <div class="d-flex flex-wrap gap-2 mt-2">
+                <div class="d-flex flex-row gap-2 mt-2">
                     <button nz-button nzType="primary" class="blue-btn" (click)="applyFilter()">Search</button>
                     <button nz-button nzType="primary" class="blue-btn" (click)="resetFilters()">Refresh</button>
                     <button nz-button nzType="primary" class="blue-btn" (click)="exportToExcelFrontend()"
                         [disabled]="isExporting">
-                        <ng-container *ngIf="!isExporting">Export Excel</ng-container>
-                        <ng-container *ngIf="isExporting">
-                            <span class="spinner-border spinner-border-sm me-2"></span> Exporting...
-                        </ng-container>
+                        Export Excel
                     </button>
-
                 </div>
+
             </div>
         </div>
     </div>
+</div>
 
-    <div class="table-container rounded shadow-sm overflow-auto">
-        <nz-table [nzBordered]="true" [nzSize]="'middle'" [nzData]="uploadedData" [nzFrontPagination]="true"
-            [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" (nzPageIndexChange)="onPageIndexChange($event)"
-            (nzPageSizeChange)="onPageSizeChange($event)" [nzShowPagination]="true" [nzShowSizeChanger]="false">
-            <thead class="custom-header">
-                <tr>
-                    <th nzWidth="60px">Sr.No</th>
-                    <th>Ticket Ref ID</th>
-                    <th>Category</th>
-                    <th>Sub Category</th>
-                    <th>Description</th>
-                    <th>Created Date</th>
-                    <th>Updated Date</th>
-                    <th>Status</th>
-                    <th>Remark</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                    *ngFor="let ticket of uploadedData | slice:(pageIndex-1)*pageSize:(pageIndex*pageSize); let i = index">
-                    <td class="text-center">{{ (pageIndex - 1) * pageSize + i + 1 }}</td>
-                    <td class="text-center">{{ ticket.ticketRefId }}</td>
-                    <td class="text-center">{{ ticket.category }}</td>
-                    <td class="text-center">{{ ticket.subCategory }}</td>
-                    <td class="text-center">{{ ticket.description }}</td>
-                    <td class="text-center">{{ ticket.createdAt | date:'dd-MM-yyyy' }}</td>
-                    <td class="text-center">{{ ticket.updatedAt ? (ticket.updatedAt | date:'dd-MM-yyyy') : '-' }}</td>
-                    <td class="text-center">
-                        <nz-tag [nzColor]="getStatusColor(ticket.status)">{{ ticket.status }}</nz-tag>
-                    </td>
-                    <td class="text-center">{{ ticket.remark }}</td>
-                </tr>
-            </tbody>
-        </nz-table>
+<div class="table-container rounded shadow-sm overflow-auto">
+    <nz-table [nzBordered]="true" [nzSize]="'middle'" [nzData]="uploadedData" [nzFrontPagination]="true"
+        [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" (nzPageIndexChange)="onPageIndexChange($event)"
+        (nzPageSizeChange)="onPageSizeChange($event)" [nzShowPagination]="true" [nzShowSizeChanger]="false">
+        <thead class="custom-header">
+            <tr>
+                <th nzWidth="60px">Sr.No</th>
+                <th>Ticket Ref ID</th>
+                <th>Category</th>
+                <th>Sub Category</th>
+                <th>Description</th>
+                <th>Created Date</th>
+                <th>Updated Date</th>
+                <th>Status</th>
+                <th>Remark</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let ticket of uploadedData | slice:(pageIndex-1)*pageSize:(pageIndex*pageSize); let i = index">
+                <td class="text-center">{{ (pageIndex - 1) * pageSize + i + 1 }}</td>
+                <td class="text-center">{{ ticket.ticketRefId }}</td>
+                <td class="text-center">{{ ticket.category }}</td>
+                <td class="text-center">{{ ticket.subCategory }}</td>
+                <td class="text-center">{{ ticket.description }}</td>
+                <td class="text-center">{{ ticket.createdAt | date:'dd-MM-yyyy' }}</td>
+                <td class="text-center">{{ ticket.updatedAt ? (ticket.updatedAt | date:'dd-MM-yyyy') : '-' }}</td>
+                <td class="text-center">
+                    <nz-tag [nzColor]="getStatusColor(ticket.status)">{{ ticket.status }}</nz-tag>
+                </td>
+                <td class="text-center">{{ ticket.remark }}</td>
+            </tr>
+        </tbody>
+    </nz-table>
 
-    </div>
 
 </div>

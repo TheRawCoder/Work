@@ -346,4 +346,10 @@ export class TicketManagementComponent implements OnInit {
     this.pageIndex = 1;
     this.loadTickets();
   }
+
+  // Add this method to fix the exportExcel error
+  exportExcel(): void {
+    // TODO: Implement your export logic here
+    this.message.info('Export Excel clicked!');
+  }
 }

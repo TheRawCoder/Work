@@ -10,7 +10,6 @@
         </div>
       </div>
     </div>
-
     <div class="card raised clickable" (click)="onStatusCardClick('Raised')"
       [class.active]="filterBy === 'status' && filters.status === 'Raised'">
       <div class="text">
@@ -20,7 +19,6 @@
         </div>
       </div>
     </div>
-
     <div class="card resolved clickable" (click)="onStatusCardClick('Resolved')"
       [class.active]="filterBy === 'status' && filters.status === 'Resolved'">
       <div class="text">
@@ -30,7 +28,6 @@
         </div>
       </div>
     </div>
-
     <div class="card rejected clickable" (click)="onStatusCardClick('Rejected')"
       [class.active]="filterBy === 'status' && filters.status === 'Rejected'">
       <div class="text">
@@ -40,15 +37,13 @@
         </div>
       </div>
     </div>
-
-    <!-- <div class="ml-auto">
-      <button nz-button nzType="default" (click)="clearStatusFilter()">Show All</button>
-    </div> -->
   </div>
 
-  <!-- Filters -->
-  <div nz-row [nzGutter]="16" class="filters mb-3">
-    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6" [nzLg]="4">
+  <!-- Filters (all controls in one flex row) -->
+  <div class="filters mb-3 d-flex flex-wrap align-items-end gap-3"
+    style="background: #f8f9fa; padding: 10px 15px; border-radius: 8px;">
+    <!-- Filter By -->
+    <div style="min-width: 160px;">
       <label class="form-label mb-1">Filter By</label>
       <nz-select class="w-100" [(ngModel)]="filterBy" [nzAllowClear]="false">
         <nz-option [nzValue]="'all'" nzLabel="All"></nz-option>
@@ -59,8 +54,7 @@
 
     <!-- Status / Ref ID conditional -->
     <ng-container *ngIf="filterBy === 'status' || filterBy === 'refId'">
-      <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6" [nzLg]="4">
-
+      <div style="min-width: 160px;">
         <ng-container *ngIf="filterBy === 'status'">
           <label class="form-label mb-1">Status</label>
           <nz-select class="w-100" [(ngModel)]="filters.status">
@@ -70,34 +64,29 @@
             <nz-option nzValue="Rejected" nzLabel="Rejected"></nz-option>
           </nz-select>
         </ng-container>
-
         <ng-container *ngIf="filterBy === 'refId'">
           <label class="form-label mb-1">Ref ID</label>
           <input nz-input [(ngModel)]="filters.ticketRefId" placeholder="Enter Ref ID" />
         </ng-container>
-
       </div>
     </ng-container>
 
     <!-- Date Range -->
-    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="8">
+    <div style="min-width: 220px;">
       <label class="form-label mb-1">Selected Date Range</label>
       <nz-range-picker [(ngModel)]="filters.dateRange" [nzFormat]="'dd/MM/yyyy'" [nzAllowClear]="true"
         [nzPopupStyle]="{ zIndex: 1050, position: 'absolute' }" nzDropdownClassName="custom-range-popup">
       </nz-range-picker>
     </div>
 
-    <!-- Buttons -->
-    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="4">
-      <label class="form-label mb-1 d-block">&nbsp;</label>
-      <div class="d-flex flex-column flex-sm-row gap-2">
-        <button nz-button nzType="primary" class="search-btn" (click)="applyFilter()">
-          <i nz-icon nzType="search"></i> Search
-        </button>
-        <button nz-button nzType="default" (click)="resetFilters()">
-          <i nz-icon nzType="reload"></i> Refresh
-        </button>
-      </div>
+    <!-- Buttons: Search, Refresh, Export Excel side by side -->
+    <div class="d-flex flex-row gap-2" style="min-width: 220px;">
+      <button nz-button nzType="primary" class="search-btn" (click)="applyFilter()">
+        <i nz-icon nzType="search"></i> Search
+      </button>
+      <button nz-button nzType="default" (click)="resetFilters()">
+        <i nz-icon nzType="reload"></i> Refresh
+      </button>
     </div>
   </div>
 
