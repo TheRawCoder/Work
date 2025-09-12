@@ -1,54 +1,56 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TicketService {
-    private base = '/api/tickets';
+    private base = '/api/ticket-master';
 
     constructor(private http: HttpClient) { }
 
-
+    // ✅ Get ticket counts (Processing, Raised, Resolved, Rejected)
     getStats(): Observable<any> {
-        return this.http.get(`${this.base}/stats`);
+        return this.http.get(`${this.base}/counts`);
     }
 
-
+    // ✅ Fetch tickets (paginated + filters)
     getTickets(opts: any = {}): Observable<any> {
         const page = Number(opts.page ?? 1);
         const limit = Number(opts.limit ?? 10);
         const skip = (page - 1) * limit;
 
-        let params = new HttpParams()
-            .set('limit', String(limit))
-            .set('skip', String(skip));
+        const body: any = { limit, skip };
 
-        if (opts.status) params = params.set('status', opts.status);
-        if (opts.refId) params = params.set('refId', opts.refId);
-        if (opts.startDate) params = params.set('startDate', opts.startDate);
-        if (opts.endDate) params = params.set('endDate', opts.endDate);
+        if (opts.status) body.status = opts.status;
+        if (opts.refId) body.ticketRefId = opts.refId; // match backend schema
+        if (opts.startDate) body.startDate = opts.startDate;
+        if (opts.endDate) body.endDate = opts.endDate;
 
-        return this.http.get(`${this.base}`, { params });
+        return this.http.post(`${this.base}/get`, body);
     }
 
-    getTicketById(id: string) {
-        return this.http.get(`${this.base}/${id}`);
+    // ✅ Fetch a ticket by refId
+    getTicketByRefId(refId: string) {
+        return this.http.post(`${this.base}/getByRefId`, { ticketRefId: refId });
     }
 
-    updateTicket(id: string, payload: any) {
-        return this.http.patch(`${this.base}/${id}/action`, payload);
-    }
-
-
-    updateTicketStatus(id: string, payload: any) {
-        return this.http.patch(`${this.base}/${id}/status`, payload);
-    }
-
+    // ✅ Create a new ticket
     createTicket(payload: any) {
-        return this.http.post(`${this.base}`, payload);
+        return this.http.post(`${this.base}/create`, payload);
     }
 
+    // ✅ Update ticket by Id
+    updateTicket(id: string, payload: any) {
+        return this.http.post(`${this.base}/updateById`, { id, ...payload });
+    }
+
+    // ✅ Update ticket status
+    updateTicketStatus(id: string, payload: any) {
+        return this.http.post(`${this.base}/updateById`, { id, ...payload });
+    }
+
+    // ✅ Add remark (handled as part of update payload, if needed)
     addRemark(id: string, payload: any) {
-        return this.http.post(`${this.base}/${id}/remarks`, payload);
+        return this.http.post(`${this.base}/updateById`, { id, remarks: [payload] });
     }
 }
