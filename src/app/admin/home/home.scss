@@ -1,14 +1,20 @@
-.stat-card {
-  border-radius: 0.5rem;
-  transition: transform 0.3s ease;
-  cursor: pointer;
+  .stat-card {
+    border-radius: 0.5rem;
+    transition: transform 0.3s ease;
+    cursor: pointer;
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-  }
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
 
-  h3, h6, span {
-    color: white;
+    h3, h6, span {
+      color: white;
+    }
+
+    .chart-section {
+    .card {
+      margin-bottom: 2rem;
+    }
   }
-}
+  }
