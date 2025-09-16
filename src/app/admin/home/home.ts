@@ -25,12 +25,20 @@ export class HomeComponent implements OnInit {
 
   barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: { legend: { display: false } }
   };
   pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: { legend: { position: 'bottom' } }
   };
+
+  get hasChartData(): boolean {
+    const barHas = (this.barChartData?.datasets?.[0]?.data?.length || 0) > 0;
+    const pieHas = (this.pieChartData?.datasets?.[0]?.data?.length || 0) > 0;
+    return barHas || pieHas;
+  }
 
   constructor(private http: HttpClient) { }
 

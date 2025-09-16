@@ -21,22 +21,47 @@
 
 <!-- Chart Section -->
 <div class="container-fluid mt-4">
-  <div class="row">
-    <div class="col-md-6 mb-4">
-      <div class="card">
-        <div class="card-header fw-bold">Tickets Bar Graph</div>
+  <div class="row align-items-stretch">
+    <div class="col-12 col-lg-6 mb-4 d-flex">
+      <div class="card flex-fill shadow-sm chart-card">
+        <div class="card-header fw-bold d-flex align-items-center justify-content-between">
+          <span>Tickets Bar Graph</span>
+          <span class="badge bg-primary-soft">Live</span>
+        </div>
         <div class="card-body">
-          <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"></canvas>
+          <ng-container *ngIf="hasChartData; else noData">
+            <div class="chart-wrapper">
+              <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"></canvas>
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>
-    <div class="col-md-6 mb-4">
-      <div class="card">
-        <div class="card-header fw-bold">Tickets Pie Chart</div>
+    <div class="col-12 col-lg-6 mb-4 d-flex">
+      <div class="card flex-fill shadow-sm chart-card">
+        <div class="card-header fw-bold d-flex align-items-center justify-content-between">
+          <span>Tickets Pie Chart</span>
+          <span class="badge bg-primary-soft">Live</span>
+        </div>
         <div class="card-body">
-          <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="'pie'"></canvas>
+          <ng-container *ngIf="hasChartData; else noData">
+            <div class="chart-wrapper">
+              <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="'pie'"></canvas>
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>
   </div>
+
+  <ng-template #noData>
+    <div class="empty-state">
+      <div class="empty-illustration">📊</div>
+      <h6 class="empty-title">No data to display</h6>
+      <p class="empty-subtitle">Once tickets are available, charts will appear here.</p>
+      <button class="btn btn-outline-primary btn-sm" (click)="fetchTicketStats()">
+        Refresh
+      </button>
+    </div>
+  </ng-template>
 </div>

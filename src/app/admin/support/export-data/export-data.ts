@@ -10,6 +10,7 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { HttpClientModule } from '@angular/common/http';
 import * as ExcelJS from 'exceljs';
 
 @Component({
@@ -23,7 +24,8 @@ import * as ExcelJS from 'exceljs';
         NzDatePickerModule,
         NzGridModule,
         NzButtonModule,
-        NzTagModule
+        NzTagModule,
+        HttpClientModule
     ],
     templateUrl: './export-data.html',
     styleUrls: ['./export-data.scss']
@@ -35,6 +37,7 @@ export class ExportData implements OnInit {
 
     pageIndex = 1;
     pageSize = 10;
+    totalRecords = 0;
 
     isExporting: boolean = false;
 
@@ -47,6 +50,9 @@ export class ExportData implements OnInit {
     ngOnInit() {
         const today = new Date();
         this.filters.dateRange = [today, today];
+
+        // initial load (all)
+        this.applyFilter();
     }
 
     private formatDate(date: Date): string {
@@ -56,57 +62,93 @@ export class ExportData implements OnInit {
     applyFilter() {
         const payload: any = {};
 
+        // pagination info
+        payload.page = this.pageIndex || 1;
+        payload.pageSize = this.pageSize || 10;
+
+        // date range
         if (this.filters.dateRange && this.filters.dateRange.length === 2) {
             payload.startDate = this.formatDate(this.filters.dateRange[0]);
             payload.endDate = this.formatDate(this.filters.dateRange[1]);
         }
 
+        // only include status when selected
         if (this.filterBy === 'status' && this.filters.status) {
             payload.status = this.filters.status;
         }
 
-        if (this.filters.ticketRefId) {
+        // only include ticketRefId when selected
+        if (this.filterBy === 'refId' && this.filters.ticketRefId) {
             payload.ticketRefId = this.filters.ticketRefId.trim();
         }
 
         this.exportService.fetchData(payload).subscribe({
             next: (res: any) => {
                 this.uploadedData = res.data || [];
-                if (!res.data?.length) {
+                this.totalRecords =
+                    typeof res.totalRecords === 'number'
+                        ? res.totalRecords
+                        : this.uploadedData.length || 0;
+
+                if (!this.uploadedData.length) {
                     this.message.warning('No records found!');
                 }
+                this.cdr.detectChanges();
             },
-            error: () => this.message.error('Error fetching data!')
+            error: (err) => {
+                console.error('Fetch error', err);
+                this.message.error('Error fetching data!');
+            }
         });
+    }
+
+    onFilterByChange(value: string) {
+        this.filterBy = value;
+
+        if (value !== 'refId') this.filters.ticketRefId = '';
+        if (value !== 'status') this.filters.status = '';
+
+        this.pageIndex = 1;
+
+        if (value === 'all') {
+            this.applyFilter();
+        }
     }
 
     resetFilters() {
         const today = new Date();
         this.filters = { status: '', ticketRefId: '', dateRange: [today, today] };
         this.filterBy = 'all';
-        this.uploadedData = []; 
+        this.pageIndex = 1;
+        this.applyFilter();
     }
 
     onPageIndexChange(index: number) {
         this.pageIndex = index;
+        this.applyFilter();
     }
 
     onPageSizeChange(size: number) {
         this.pageSize = size;
         this.pageIndex = 1;
+        this.applyFilter();
     }
 
     getStatusColor(status: string): string {
         switch (status) {
-            case 'Processing': return '#FAAD14';
-            case 'Raised': return '#2F54EB';
-            case 'Resolved': return '#52C41A';
-            case 'Rejected': return '#FF4D4F';
-            default: return '#D9D9D9';
+            case 'Processing':
+                return '#FAAD14';
+            case 'Raised':
+                return '#2F54EB';
+            case 'Resolved':
+                return '#52C41A';
+            case 'Rejected':
+                return '#FF4D4F';
+            default:
+                return '#D9D9D9';
         }
     }
 
-    
     private normalizeToArrayBufferCopy(bufferResult: unknown): ArrayBuffer {
         if (bufferResult instanceof ArrayBuffer) {
             const src = new Uint8Array(bufferResult);
@@ -117,7 +159,11 @@ export class ExportData implements OnInit {
 
         if (ArrayBuffer.isView(bufferResult as any)) {
             const view = bufferResult as ArrayBufferView;
-            const src = new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
+            const src = new Uint8Array(
+                view.buffer,
+                view.byteOffset,
+                view.byteLength
+            );
             const dest = new Uint8Array(src.length);
             dest.set(src);
             return dest.buffer;
@@ -125,8 +171,14 @@ export class ExportData implements OnInit {
 
         if (bufferResult && typeof bufferResult === 'object' && (bufferResult as any).buffer) {
             const maybeBuf = (bufferResult as any).buffer;
-            const byteOffset = typeof (bufferResult as any).byteOffset === 'number' ? (bufferResult as any).byteOffset : 0;
-            const byteLength = typeof (bufferResult as any).byteLength === 'number' ? (bufferResult as any).byteLength : (maybeBuf && maybeBuf.byteLength) || 0;
+            const byteOffset =
+                typeof (bufferResult as any).byteOffset === 'number'
+                    ? (bufferResult as any).byteOffset
+                    : 0;
+            const byteLength =
+                typeof (bufferResult as any).byteLength === 'number'
+                    ? (bufferResult as any).byteLength
+                    : (maybeBuf && maybeBuf.byteLength) || 0;
             if (maybeBuf instanceof ArrayBuffer) {
                 const src = new Uint8Array(maybeBuf, byteOffset, byteLength);
                 const dest = new Uint8Array(src.length);
@@ -152,19 +204,21 @@ export class ExportData implements OnInit {
                 const worksheet = workbook.addWorksheet('UploadedData');
 
                 const firstRow = this.uploadedData[0] || {};
-                worksheet.columns = Object.keys(firstRow).map(key => ({
+                worksheet.columns = Object.keys(firstRow).map((key) => ({
                     header: key,
                     key: key,
                     width: 20
                 }));
 
-                this.uploadedData.forEach(record => worksheet.addRow(record));
+                this.uploadedData.forEach((record) => worksheet.addRow(record));
 
-                workbook.xlsx.writeBuffer()
+                workbook.xlsx
+                    .writeBuffer()
                     .then((bufferResult: unknown) => {
                         try {
-                            
-                            const arrayBufferCopy = this.normalizeToArrayBufferCopy(bufferResult);
+                            const arrayBufferCopy = this.normalizeToArrayBufferCopy(
+                                bufferResult
+                            );
 
                             const blob = new Blob([arrayBufferCopy], {
                                 type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'

@@ -1,11 +1,10 @@
 <div class="export-data p-4 mt-5">
-
     <div class="filters mb-4 p-3 bg-light rounded shadow-sm">
         <div nz-row [nzGutter]="16" class="align-items-end">
-
             <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6" [nzLg]="4">
                 <label class="form-label mb-1">Filter By</label>
-                <nz-select class="w-100" [(ngModel)]="filterBy" [nzAllowClear]="false">
+                <nz-select class="w-100" [(ngModel)]="filterBy" (ngModelChange)="onFilterByChange($event)"
+                    [nzAllowClear]="false">
                     <nz-option [nzValue]="'all'" nzLabel="All"></nz-option>
                     <nz-option [nzValue]="'status'" nzLabel="Status"></nz-option>
                     <nz-option [nzValue]="'refId'" nzLabel="Ref ID"></nz-option>
@@ -16,7 +15,7 @@
                 <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="6" [nzLg]="4">
                     <ng-container *ngIf="filterBy === 'status'">
                         <label class="form-label mb-1">Status</label>
-                        <nz-select class="w-100" [(ngModel)]="filters.status">
+                        <nz-select class="w-100" [(ngModel)]="filters.status" nzAllowClear>
                             <nz-option nzValue="Processing" nzLabel="Processing"></nz-option>
                             <nz-option nzValue="Raised" nzLabel="Raised"></nz-option>
                             <nz-option nzValue="Resolved" nzLabel="Resolved"></nz-option>
@@ -39,23 +38,29 @@
 
             <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="4">
                 <div class="d-flex flex-row gap-2 mt-2">
-                    <button nz-button nzType="primary" class="blue-btn" (click)="applyFilter()">Search</button>
-                    <button nz-button nzType="primary" class="blue-btn" (click)="resetFilters()">Refresh</button>
+                    <button nz-button nzType="primary" class="blue-btn" (click)="applyFilter()"
+                        [disabled]="(filterBy === 'refId' && !filters.ticketRefId) || (filterBy === 'status' && !filters.status)">
+                        Search
+                    </button>
+
+                    <button nz-button nzType="default" class="blue-btn-outline" (click)="resetFilters()">
+                        Refresh
+                    </button>
+
                     <button nz-button nzType="primary" class="blue-btn" (click)="exportToExcelFrontend()"
-                        [disabled]="isExporting">
+                        [disabled]="isExporting || !uploadedData.length">
                         Export Excel
                     </button>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
 
 <div class="table-container rounded shadow-sm overflow-auto">
-    <nz-table [nzBordered]="true" [nzSize]="'middle'" [nzData]="uploadedData" [nzFrontPagination]="true"
-        [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" (nzPageIndexChange)="onPageIndexChange($event)"
-        (nzPageSizeChange)="onPageSizeChange($event)" [nzShowPagination]="true" [nzShowSizeChanger]="false">
+    <nz-table [nzFrontPagination]="false" [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" [nzTotal]="totalRecords"
+        (nzPageIndexChange)="onPageIndexChange($event)" (nzPageSizeChange)="onPageSizeChange($event)"
+        [nzData]="uploadedData" nzBordered nzSize="middle" [nzShowPagination]="true" [nzShowSizeChanger]="true">
         <thead class="custom-header">
             <tr>
                 <th nzWidth="60px">Sr.No</th>
@@ -69,8 +74,9 @@
                 <th>Remark</th>
             </tr>
         </thead>
+
         <tbody>
-            <tr *ngFor="let ticket of uploadedData | slice:(pageIndex-1)*pageSize:(pageIndex*pageSize); let i = index">
+            <tr *ngFor="let ticket of uploadedData; let i = index">
                 <td class="text-center">{{ (pageIndex - 1) * pageSize + i + 1 }}</td>
                 <td class="text-center">{{ ticket.ticketRefId }}</td>
                 <td class="text-center">{{ ticket.category }}</td>
@@ -85,6 +91,4 @@
             </tr>
         </tbody>
     </nz-table>
-
-
 </div>
